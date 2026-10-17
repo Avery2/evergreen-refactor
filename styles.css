@@ -1,0 +1,164 @@
+/* Evergreen Refactor — styles for the destination picker and the decision prompt. */
+
+.evergreen-refactor-destination .modal-content {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.evergreen-refactor-input {
+	width: 100%;
+	font-size: var(--font-ui-medium);
+	padding: 8px 10px;
+}
+
+.evergreen-refactor-results {
+	max-height: 45vh;
+	overflow-y: auto;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s, 4px);
+	padding: 4px;
+}
+
+.evergreen-refactor-result {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	padding: 6px 8px;
+	border-radius: var(--radius-s, 4px);
+	cursor: pointer;
+}
+
+.evergreen-refactor-result.is-active {
+	background-color: var(--background-modifier-hover);
+}
+
+.evergreen-refactor-result.is-selected .evergreen-refactor-result-title {
+	color: var(--text-accent);
+	font-weight: var(--font-semibold, 600);
+}
+
+.evergreen-refactor-result.is-create .evergreen-refactor-result-title {
+	color: var(--text-accent);
+}
+
+.evergreen-refactor-check {
+	flex: 0 0 auto;
+	width: 1em;
+	color: var(--text-accent);
+	font-weight: var(--font-semibold, 600);
+}
+
+.evergreen-refactor-result-title {
+	flex: 1 1 auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.evergreen-refactor-result-path {
+	flex: 0 0 auto;
+	max-width: 45%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+}
+
+.evergreen-refactor-empty {
+	padding: 12px 8px;
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+}
+
+.evergreen-refactor-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 2.2em;
+}
+
+.evergreen-refactor-footer-hint {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Decision prompt */
+
+.evergreen-refactor-decision .evergreen-refactor-reason {
+	margin-top: 0;
+	color: var(--text-muted);
+}
+
+.evergreen-refactor-options {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.evergreen-refactor-option {
+	display: block;
+	width: 100%;
+	text-align: left;
+	height: auto;
+	padding: 10px 12px;
+	white-space: normal;
+}
+
+.evergreen-refactor-option-label {
+	font-weight: var(--font-semibold, 600);
+	margin-bottom: 4px;
+}
+
+.evergreen-refactor-option-desc {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	line-height: 1.4;
+}
+
+.evergreen-refactor-cancel {
+	width: 100%;
+}
+
+/* Settings examples */
+
+.evergreen-refactor-examples {
+	margin: -4px 0 18px;
+}
+
+.evergreen-refactor-example {
+	padding: 6px 10px;
+	border-left: 2px solid var(--background-modifier-border);
+	opacity: 0.6;
+}
+
+.evergreen-refactor-example.is-active {
+	border-left-color: var(--interactive-accent);
+	opacity: 1;
+}
+
+.evergreen-refactor-example-label {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
+.evergreen-refactor-example-code {
+	margin: 4px 0 0;
+	padding: 0;
+	background: none;
+	font-size: var(--font-ui-smaller);
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.evergreen-refactor-hint {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	margin-top: -6px;
+}

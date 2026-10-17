@@ -1,0 +1,19 @@
+# Build output: produced by `npm run build`, shipped via GitHub releases.
+main.js
+main.js.map
+*.map
+
+# Dependencies
+node_modules/
+
+# Obsidian plugin runtime data
+data.json
+
+# Obsidian vault (never commit a vault from this repo)
+.obsidian/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.log

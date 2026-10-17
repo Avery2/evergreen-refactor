@@ -1,0 +1,10 @@
+{
+	"id": "evergreen-refactor",
+	"name": "Evergreen Refactor",
+	"version": "0.1.0",
+	"minAppVersion": "1.7.2",
+	"description": "Reference a passage from your freeform writing in one or more notes using native block references and embeds. The original text stays put and stays canonical.",
+	"author": "Avery Chan",
+	"authorUrl": "https://github.com/Avery2",
+	"isDesktopOnly": false
+}
