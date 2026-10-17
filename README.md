@@ -110,7 +110,7 @@ A block ID looks like `20261016-164300-a7c9`: a local timestamp plus a short ran
 
 ## Local development
 
-Requires Node 20 or newer (Node 22+ recommended, for running the TypeScript test files directly).
+Requires **Node 22.18 or newer** (Node 24 LTS recommended). The test files are TypeScript, which Node runs directly — no build step or test framework needed.
 
 ```bash
 git clone https://github.com/Avery2/evergreen-refactor.git
