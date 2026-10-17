@@ -50,23 +50,36 @@ See [Local development](#local-development) below.
 ## Use
 
 1. Select a passage in any note. A whole paragraph is the common case; see [Selections](#selections) for the rest.
-2. Right-click the selection and choose **Reference current selection…**.
+2. Right-click the selection and pick one of:
 
-   It sits in the same dropdown as Note Composer's **Extract current selection**, because it is the same move with a different outcome: extract *moves* the passage, reference *leaves it where it is*. If you prefer the keyboard, `Cmd/Ctrl+P` and run **Evergreen Refactor: Reference current selection…**.
-3. A picker opens. Type to search your notes, press `Enter` to add one, and repeat for as many destinations as you like. Type a name that doesn't exist yet and it's offered as **Create "…"**.
-4. Press `Cmd/Ctrl+Enter` (or click the button) to confirm.
-5. The source note gets a timestamped block ID, and each destination note gets the reference.
+   - **Reference current selection…** — pick a note and it's referenced straight away. One click, nothing to confirm.
+   - **Reference current selection in several notes…** — pick as many as you like, then `Cmd/Ctrl+Enter`.
+
+   Both sit in the same dropdown as Note Composer's **Extract current selection**, because they are the same move with a different outcome: extract *moves* the passage, reference *leaves it where it is*. The keyboard equivalents are in the command palette under **Evergreen Refactor**.
+3. In the picker, type to filter your notes. A name that doesn't exist yet is offered as **Create "…"**.
+4. The source note gets a timestamped block ID, and each destination note gets the reference.
 
 Assign a keyboard shortcut under **Settings → Hotkeys** — search for "Evergreen Refactor".
 
 ### The picker
+
+**Reference current selection…**
+
+| Key | Action |
+| --- | --- |
+| Type | Filter notes, or start a new note name |
+| `↑` `↓` | Move through the list |
+| `Enter` | Reference in the highlighted note and close |
+| `Esc` | Cancel without changing anything |
+
+**Reference current selection in several notes…**
 
 | Key | Action |
 | --- | --- |
 | Type | Filter notes, or start a new note name |
 | `↑` `↓` | Move through the list |
 | `Enter` | Add or remove the highlighted note |
-| `Cmd/Ctrl+Enter` | Confirm and write the references |
+| `Cmd/Ctrl+Enter` | Write all of them |
 | `Esc` | Cancel without changing anything |
 
 Existing references are never duplicated. Running the same operation twice is safe: if a destination note already points at that block, it is left alone. If the passage already has a block ID, that ID is reused rather than a second one being added.

@@ -3,7 +3,12 @@ import type { Editor, MarkdownFileInfo, MarkdownView } from 'obsidian';
 
 import { newBlockId } from './block-id.ts';
 import { joinVaultPath, sanitizeNoteTitle } from './destination-path.ts';
-import { DecisionModal, DestinationModal, type DestinationChoice } from './modals.ts';
+import {
+	type DestinationChoice,
+	DestinationModal,
+	type DestinationMode,
+	DecisionModal,
+} from './modals.ts';
 import { buildReferenceLines, createPreview, unusableTargetReason } from './reference.ts';
 import { type SelectionPlan, type SelectionRange, analyzeSelection } from './selection-plan.ts';
 import { EvergreenRefactorSettingTab } from './settings.ts';
@@ -38,7 +43,15 @@ export default class EvergreenRefactorPlugin extends Plugin {
 			id: 'reference-selection-in-note',
 			name: 'Reference current selection…',
 			editorCallback: (editor, ctx) => {
-				void this.referenceSelection(editor, ctx);
+				void this.referenceSelection(editor, ctx, 'single');
+			},
+		});
+
+		this.addCommand({
+			id: 'reference-selection-in-notes',
+			name: 'Reference current selection in several notes…',
+			editorCallback: (editor, ctx) => {
+				void this.referenceSelection(editor, ctx, 'multiple');
 			},
 		});
 
@@ -56,7 +69,17 @@ export default class EvergreenRefactorPlugin extends Plugin {
 						.setIcon('links-going-out')
 						.setSection('selection')
 						.onClick(() => {
-							void this.referenceSelection(editor, ctx);
+							void this.referenceSelection(editor, ctx, 'single');
+						}),
+				);
+
+				menu.addItem((item) =>
+					item
+						.setTitle('Reference current selection in several notes…')
+						.setIcon('links-going-out')
+						.setSection('selection')
+						.onClick(() => {
+							void this.referenceSelection(editor, ctx, 'multiple');
 						}),
 				);
 			}),
@@ -78,6 +101,7 @@ export default class EvergreenRefactorPlugin extends Plugin {
 	private async referenceSelection(
 		editor: Editor,
 		ctx: MarkdownView | MarkdownFileInfo,
+		mode: DestinationMode,
 	): Promise<void> {
 		const sourceFile = ctx.file;
 		if (!sourceFile) {
@@ -119,6 +143,7 @@ export default class EvergreenRefactorPlugin extends Plugin {
 		}
 
 		const destinations = await new DestinationModal(this.app, {
+			mode,
 			sourceFile,
 			pathForNewNote: (title) => this.pathForNewNote(title),
 		}).openAndWait();

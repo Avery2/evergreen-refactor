@@ -63,7 +63,11 @@ try {
 }
 
 const Plugin = module_.exports?.default;
-check('main.js registers the command palette entry', source.includes('reference-selection-in-note'));
+check(
+	'main.js registers both command palette entries',
+	source.includes('reference-selection-in-note') &&
+		source.includes('reference-selection-in-notes'),
+);
 check(
 	'main.js wires up the selection context menu',
 	source.includes('editor-menu'),

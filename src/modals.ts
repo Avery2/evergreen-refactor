@@ -92,7 +92,15 @@ export interface CreateChoice {
 
 export type DestinationChoice = FileChoice | CreateChoice;
 
+export type DestinationMode = 'single' | 'multiple';
+
 export interface DestinationModalOptions {
+	/**
+	 * `single` writes the reference as soon as a note is chosen, because that is
+	 * the common case and an extra confirm keystroke for it is pure friction.
+	 * `multiple` keeps the picker open so several notes can be accumulated.
+	 */
+	mode: DestinationMode;
 	/** Full vault path for a note that would be created from a typed title. */
 	pathForNewNote: (title: string) => string;
 	/** Note the passage came from, so it can be labelled in the list. */
@@ -135,7 +143,11 @@ export class DestinationModal extends Modal {
 
 	override onOpen(): void {
 		this.modalEl.addClass('evergreen-refactor-destination');
-		this.titleEl.setText('Reference this passage in…');
+		this.titleEl.setText(
+			this.options.mode === 'single'
+				? 'Reference this passage in…'
+				: 'Reference this passage in several notes…',
+		);
 
 		this.inputEl = this.contentEl.createEl('input', {
 			cls: 'evergreen-refactor-input',
@@ -197,6 +209,15 @@ export class DestinationModal extends Modal {
 
 	private toggle(choice: DestinationChoice): void {
 		const key = keyOf(choice);
+
+		// Single-note mode: choosing *is* confirming.
+		if (this.options.mode === 'single') {
+			this.selected.set(key, choice);
+			this.confirmed = true;
+			this.close();
+			return;
+		}
+
 		if (this.selected.has(key)) this.selected.delete(key);
 		else this.selected.set(key, choice);
 		this.renderResults();
@@ -205,6 +226,8 @@ export class DestinationModal extends Modal {
 
 	private confirm(): void {
 		if (this.confirmed) return;
+		// In single-note mode there is nothing left to confirm.
+		if (this.options.mode === 'single') return;
 		if (this.selected.size === 0) {
 			new Notice('Pick at least one note, or press Escape to cancel.');
 			return;
@@ -318,6 +341,10 @@ export class DestinationModal extends Modal {
 		);
 
 		const hint = this.footerEl.createDiv({ cls: 'evergreen-refactor-footer-hint' });
+		if (this.options.mode === 'single') {
+			hint.setText('Enter to reference it here · Esc to cancel');
+			return;
+		}
 		if (names.length === 0) {
 			hint.setText('Enter to add a note · ⌘/Ctrl+Enter to confirm · Esc to cancel');
 			return;
