@@ -86,6 +86,26 @@ Existing references are never duplicated. Running the same operation twice is sa
 
 ---
 
+## Renaming a block ID
+
+A timestamped ID is unique and sortable but says nothing about what the passage is about. When a passage turns out to matter, rename it to something readable and every reference follows.
+
+1. Put the cursor inside a block that has an ID, or on the `^id` line beneath it.
+2. Right-click → **Rename block ID…**, or `Cmd/Ctrl+P` → **Evergreen Refactor: Rename block ID at cursor…**.
+3. The prompt tells you how widely the block is referenced — *"This block is referenced in 2 notes (3 links). Renaming will update every one of them."* — and lets you type the new ID.
+4. **Rename** rewrites the definition and every link pointing at it, across the whole vault.
+
+This is the block-level equivalent of Obsidian's "rename a note and update all its links".
+
+Worth knowing:
+
+- References are found through Obsidian's metadata cache, which already records the position of every link, so nothing has to be read or pattern-matched to locate them. The rewrite is scoped to the exact link.
+- Links pointing at a *different* note that happens to use the same ID are left alone.
+- The rename in the source note goes through the editor, so `Cmd+Z` undoes it.
+- **Editing a `^id` by hand will break its references** — nothing can tell that the old ID and the new one are the same thing. Use the command instead.
+
+---
+
 ## Reference display
 
 One setting, **Settings → Evergreen Refactor → Reference display**:

@@ -116,6 +116,24 @@ Repeating the operation must not duplicate anything. Two mechanisms:
 - If the passage already carries a block ID, that ID is **reused** rather than a new one being minted. Without this, a second run would generate a different ID and every dedupe check would miss.
 - Before appending, `missingReferences` checks whether the destination already contains that anchor *inside a wiki link* — `anchorPattern` requires the anchor to be followed by `]`, `|` or `#`. A passing mention of the same words in prose does not count as a reference.
 
+## Renaming a block ID
+
+Obsidian renames files and updates incoming links, but has no equivalent for blocks. This is that, for blocks.
+
+The interesting question is how to find the references cheaply. Reading every note and regex-searching for `#^id` works but is a full vault read on every rename, and it cannot tell a real reference from prose that happens to contain the same text.
+
+Obsidian's metadata cache already solves both problems: `getFileCache(file)` returns `links` and `embeds`, each a `CacheItem` with the untouched `original` link text and its exact `position`. So the search is a lookup per file rather than a scan, and the rewrite can be scoped to the link itself.
+
+Three things that lookup has to get right:
+
+- **The target, not just the anchor.** `^mom-rush` could exist in several notes. A link only counts if its target resolves back to this note, which means parsing the linkpath out of `original` and resolving it with `getFirstLinkpathDest`.
+- **Embeds as well as links.** `![[…]]` lives in `cache.embeds`, not `cache.links`. Missing it would silently break every embed.
+- **Parsing rather than trusting.** The cache's own `link` field is normalised, and differs between links and embeds. `original` is what the user actually typed, so `parseWikiLink` handles the `#` and `|` splitting itself.
+
+The rewrite then replaces `#^oldId` within the link's column range only. Because a rename changes the line's length, sites are applied bottom-up and right-to-left — otherwise the recorded columns of earlier links on the same line would drift. There is a test for exactly that, in both directions (a longer replacement and a shorter one).
+
+The last subtlety is the source note. If a note links to its own block, rewriting it through the vault API would read from disk and clobber whatever the editor has not saved yet. Self-references therefore go through the editor, in the same pass as the ID definition, so the whole rename is one `Cmd+Z`.
+
 ## Deliberate non-goals
 
 - **No automatic topic suggestions.** Deciding that a passage belongs in `Improving relationships` is the thinking the user wants to do.

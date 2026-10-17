@@ -371,3 +371,115 @@ export class DestinationModal extends Modal {
 function keyOf(choice: DestinationChoice): string {
 	return choice.kind === 'create' ? `create:${choice.path}` : `file:${choice.file.path}`;
 }
+
+export interface PromptModalOptions {
+	title: string;
+	description: string;
+	initialValue: string;
+	placeholder: string;
+	submitLabel: string;
+	/** Renders the value as it will actually be written, for reassurance. */
+	preview: (value: string) => string;
+	/** Returns an error message, or null when the value is acceptable. */
+	validate: (value: string) => string | null;
+}
+
+/** A single-field prompt. Obsidian has no built-in one. */
+export class PromptModal extends Modal {
+	private readonly options: PromptModalOptions;
+	private resolver: ((value: string | null) => void) | null = null;
+	private settled = false;
+
+	private inputEl!: HTMLInputElement;
+	private previewEl!: HTMLElement;
+	private errorEl!: HTMLElement;
+	private submitEl!: HTMLButtonElement;
+
+	constructor(app: App, options: PromptModalOptions) {
+		super(app);
+		this.options = options;
+	}
+
+	openAndWait(): Promise<string | null> {
+		return new Promise((resolve) => {
+			this.resolver = resolve;
+			this.open();
+		});
+	}
+
+	override onOpen(): void {
+		this.modalEl.addClass('evergreen-refactor-prompt');
+		this.titleEl.setText(this.options.title);
+
+		this.contentEl.createEl('p', {
+			cls: 'evergreen-refactor-reason',
+			text: this.options.description,
+		});
+
+		this.inputEl = this.contentEl.createEl('input', {
+			cls: 'evergreen-refactor-input',
+			attr: {
+				type: 'text',
+				placeholder: this.options.placeholder,
+				spellcheck: 'false',
+			},
+		});
+		this.inputEl.value = this.options.initialValue;
+		this.inputEl.addEventListener('input', () => this.refresh());
+		this.inputEl.addEventListener('keydown', (event) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				this.submit();
+			} else if (event.key === 'Escape') {
+				event.preventDefault();
+				this.close();
+			}
+		});
+
+		this.previewEl = this.contentEl.createDiv({ cls: 'evergreen-refactor-preview' });
+		this.errorEl = this.contentEl.createDiv({ cls: 'evergreen-refactor-error' });
+
+		const buttons = this.contentEl.createDiv({ cls: 'evergreen-refactor-buttons' });
+		const cancel = buttons.createEl('button', { text: 'Cancel' });
+		cancel.addEventListener('click', () => this.close());
+
+		this.submitEl = buttons.createEl('button', {
+			cls: 'mod-cta',
+			text: this.options.submitLabel,
+		});
+		this.submitEl.addEventListener('click', () => this.submit());
+
+		this.refresh();
+		window.setTimeout(() => {
+			this.inputEl.focus();
+			this.inputEl.select();
+		}, 0);
+	}
+
+	private refresh(): void {
+		const value = this.inputEl.value;
+		const error = this.options.validate(value);
+
+		this.errorEl.setText(error ?? '');
+		this.errorEl.toggleClass('is-visible', error !== null);
+		this.previewEl.setText(error === null ? this.options.preview(value) : '');
+		this.submitEl.disabled = error !== null;
+	}
+
+	private submit(): void {
+		if (this.options.validate(this.inputEl.value) !== null) return;
+		this.settled = true;
+		this.resolver?.(this.inputEl.value);
+		this.resolver = null;
+		this.close();
+	}
+
+	override onClose(): void {
+		super.onClose();
+		this.contentEl.empty();
+		if (this.settled) return;
+		this.settled = true;
+		this.resolver?.(null);
+		this.resolver = null;
+	}
+}

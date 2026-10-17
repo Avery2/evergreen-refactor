@@ -162,3 +162,31 @@
 	font-size: var(--font-ui-smaller);
 	margin-top: -6px;
 }
+
+/* Prompt (rename a block ID) */
+
+.evergreen-refactor-prompt .evergreen-refactor-preview {
+	min-height: 1.4em;
+	color: var(--text-muted);
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-smaller);
+	word-break: break-all;
+}
+
+.evergreen-refactor-prompt .evergreen-refactor-error {
+	min-height: 1.4em;
+	color: var(--text-error);
+	font-size: var(--font-ui-smaller);
+	opacity: 0;
+}
+
+.evergreen-refactor-prompt .evergreen-refactor-error.is-visible {
+	opacity: 1;
+}
+
+.evergreen-refactor-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 8px;
+}

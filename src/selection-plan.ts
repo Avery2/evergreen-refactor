@@ -230,12 +230,12 @@ function textOf(lines: DocLine[], startLine: number, endLine: number): string {
 /* Existing identifiers                                                */
 /* ------------------------------------------------------------------ */
 
-function existingInlineId(line: DocLine): string | null {
+export function existingInlineId(line: DocLine): string | null {
 	const match = INLINE_ID_RE.exec(line.text);
 	return match && isValidBlockId(match[1]) ? match[1] : null;
 }
 
-function existingStandaloneId(lines: DocLine[], afterLine: number): string | null {
+export function existingStandaloneId(lines: DocLine[], afterLine: number): string | null {
 	let index = afterLine + 1;
 	while (index < lines.length && lines[index].kind === 'blank') index += 1;
 	if (index >= lines.length) return null;
