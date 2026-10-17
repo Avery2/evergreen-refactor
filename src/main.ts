@@ -36,11 +36,31 @@ export default class EvergreenRefactorPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'reference-selection-in-note',
-			name: 'Reference selection in another note…',
+			name: 'Reference current selection…',
 			editorCallback: (editor, ctx) => {
 				void this.referenceSelection(editor, ctx);
 			},
 		});
+
+		// The same action, in the same dropdown the selection context menu
+		// already offers "Extract current selection" from. Highlighting text and
+		// right-clicking is how this workflow is actually reached; the command
+		// palette is the fallback for when there is no editor focused.
+		this.registerEvent(
+			this.app.workspace.on('editor-menu', (menu, editor, ctx) => {
+				if (editor.getSelection().trim().length === 0) return;
+
+				menu.addItem((item) =>
+					item
+						.setTitle('Reference current selection…')
+						.setIcon('links-going-out')
+						.setSection('selection')
+						.onClick(() => {
+							void this.referenceSelection(editor, ctx);
+						}),
+				);
+			}),
+		);
 	}
 
 	async loadSettings(): Promise<void> {

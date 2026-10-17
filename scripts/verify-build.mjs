@@ -63,6 +63,11 @@ try {
 }
 
 const Plugin = module_.exports?.default;
+check('main.js registers the command palette entry', source.includes('reference-selection-in-note'));
+check(
+	'main.js wires up the selection context menu',
+	source.includes('editor-menu'),
+);
 check('main.js exports a plugin class by default', typeof Plugin === 'function');
 check(
 	'the plugin class implements onload',

@@ -50,7 +50,9 @@ See [Local development](#local-development) below.
 ## Use
 
 1. Select a passage in any note. A whole paragraph is the common case; see [Selections](#selections) for the rest.
-2. Open the command palette (`Cmd/Ctrl+P`) and run **Evergreen Refactor: Reference selection in another note…**.
+2. Right-click the selection and choose **Reference current selection…**.
+
+   It sits in the same dropdown as Note Composer's **Extract current selection**, because it is the same move with a different outcome: extract *moves* the passage, reference *leaves it where it is*. If you prefer the keyboard, `Cmd/Ctrl+P` and run **Evergreen Refactor: Reference current selection…**.
 3. A picker opens. Type to search your notes, press `Enter` to add one, and repeat for as many destinations as you like. Type a name that doesn't exist yet and it's offered as **Create "…"**.
 4. Press `Cmd/Ctrl+Enter` (or click the button) to confirm.
 5. The source note gets a timestamped block ID, and each destination note gets the reference.
